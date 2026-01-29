@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.pyc
+venv/
+.venv/
+
+# Datasets (CRITICAL)
+dataset/
+datasets/
+data/
+*.csv
+*.jpeg
+*.jpg
+*.png
+
+# Models
+model/
+*.pkl
+*.h5
+*.pt
+
+# Uploads
+static/uploads/
+
+# Env
+.env
+
+# OS
+.DS_Store

@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Meet the Developers | Medical AI Project</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f4f9ff, #eef6ff);
+      color: #333;
+    }
+
+    .team-container {
+      max-width: 1100px;
+      margin: 60px auto;
+      padding: 40px;
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+      animation: fadeUp 1s ease;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .page-title {
+      text-align: center;
+      color: #0d6efd;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 15px;
+      color: #666;
+      margin-bottom: 40px;
+    }
+
+    .section {
+      margin-top: 40px;
+      animation: slideIn 0.8s ease;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .section h4 {
+      font-weight: 600;
+      margin-bottom: 15px;
+      position: relative;
+    }
+
+    .section h4::after {
+      content: "";
+      display: block;
+      width: 60px;
+      height: 3px;
+      background: #0d6efd;
+      margin-top: 6px;
+      border-radius: 10px;
+    }
+
+    .section p {
+      font-size: 15.5px;
+      line-height: 1.7;
+      color: #555;
+    }
+
+    .card-box {
+      background: #f1f7ff;
+      border-radius: 15px;
+      padding: 25px;
+      height: 100%;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+      transition: transform 0.3s ease;
+    }
+
+    .card-box:hover {
+      transform: translateY(-6px);
+    }
+
+    .skill-badge {
+      background: #0d6efd;
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      margin: 5px;
+      display: inline-block;
+    }
+
+    .tech-stack span {
+      background: #eef3ff;
+      padding: 10px 15px;
+      border-radius: 12px;
+      margin: 8px;
+      display: inline-block;
+      font-size: 14px;
+      font-weight: 500;
+      color: #0d6efd;
+    }
+
+    .vision-box {
+      background: linear-gradient(135deg, #0d6efd, #4f8cff);
+      color: #fff;
+      padding: 30px;
+      border-radius: 18px;
+      margin-top: 50px;
+    }
+
+    .vision-box p {
+      color: #f1f1f1;
+      margin: 0;
+      font-size: 15.5px;
+    }
+
+    @media (max-width: 768px) {
+      .team-container {
+        padding: 25px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="team-container">
+
+    <h2 class="page-title">Meet the Developers</h2>
+    <p class="subtitle">
+      Data Scientists in Training • Data Analysts • ML Developers • SQL Developers
+    </p>
+
+    <!-- INTRO -->
+    <div class="section">
+      <p>
+        Hello, World! 👋  
+        We are a passionate and professional team from the <strong>Vellore Institute of Technology</strong>,
+        specializing in Data Science, Analytics, Visualization, and Machine Learning.
+        As self-learners with strong project experience, we are driven by the mission to use
+        technology to create meaningful impact in people’s lives.
+      </p>
+    </div>
+
+    <!-- CARDS -->
+    <div class="row mt-4 g-4">
+      <div class="col-md-6">
+        <div class="card-box">
+          <h4>Our Expertise</h4>
+          <p>
+            With a strong foundation in data analysis, machine learning, and recommendation systems,
+            we specialize in extracting actionable insights from complex datasets and building
+            intelligent, real-world solutions.
+          </p>
+
+          <div>
+            <span class="skill-badge">Python</span>
+            <span class="skill-badge">SQL</span>
+            <span class="skill-badge">Machine Learning</span>
+            <span class="skill-badge">Data Analysis</span>
+            <span class="skill-badge">Recommendation Systems</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card-box">
+          <h4>Project Experience</h4>
+          <p>
+            We have successfully worked on multiple projects including disease prediction systems,
+            sentiment analysis, healthcare analytics, and predictive modeling using modern ML
+            techniques and user-centric design principles.
+          </p>
+
+          <div>
+            <span class="skill-badge">Flask API</span>
+            <span class="skill-badge">Tableau</span>
+            <span class="skill-badge">Power BI</span>
+            <span class="skill-badge">Visualization</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TECH STACK -->
+    <div class="section">
+      <h4>Technology Stack</h4>
+      <div class="tech-stack">
+        <span>Python</span>
+        <span>Flask</span>
+        <span>Decision Tree</span>
+        <span>Pandas</span>
+        <span>NumPy</span>
+        <span>Scikit-Learn</span>
+        <span>Bootstrap</span>
+        <span>HTML & CSS</span>
+      </div>
+    </div>
+
+    <!-- COMMITMENT -->
+    <div class="section">
+      <h4>Commitment to Excellence</h4>
+      <p>
+        Our work is guided by a strong belief that technology should be accessible, ethical, and
+        beneficial to everyone. From predictive models to intuitive interfaces, we focus on
+        solutions that are innovative, scalable, and user-friendly.
+      </p>
+    </div>
+
+    <!-- VISION -->
+    <div class="vision-box">
+      <h4 style="color:#fff;">Join Us on This Journey</h4>
+      <p>
+        We invite you to explore the fusion of Artificial Intelligence and Healthcare through this
+        project. Together, we aim to empower individuals with knowledge, promote well-being, and
+        contribute toward a smarter, healthier future.
+      </p>
+    </div>
+
+  </div>
+
+</body>
+</html>
+
