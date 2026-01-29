@@ -13,3 +13,4 @@ A user-friendly healthcare web application that allows users to enter symptoms a
 	•	📊 Dataset-driven recommendations
 	•	⚡ Real-time results using Flask routing
 	•	🔌 ML-ready architecture (plug & play)
+
