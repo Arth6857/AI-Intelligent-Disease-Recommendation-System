@@ -1,0 +1,112 @@
+<!-- register.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register - AI Health System</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background: linear-gradient(135deg,#111827,#1e293b,#0f172a);
+    font-family: Arial, sans-serif;
+}
+
+.auth-box{
+    width:100%;
+    max-width:430px;
+    padding:35px;
+    border-radius:20px;
+    background: rgba(255,255,255,0.12);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border:1px solid rgba(255,255,255,0.2);
+    box-shadow:0 15px 35px rgba(0,0,0,0.35);
+}
+
+.auth-title{
+    color:white;
+    font-size:42px;
+    font-weight:700;
+    text-align:center;
+    margin-bottom:25px;
+}
+
+.form-control{
+    height:52px;
+    border-radius:12px;
+    border:none;
+    padding-left:15px;
+    font-size:17px;
+}
+
+.form-control:focus{
+    box-shadow:0 0 0 3px rgba(34,197,94,.35);
+}
+
+.btn-register{
+    height:52px;
+    border:none;
+    border-radius:12px;
+    background: linear-gradient(90deg,#16a34a,#22c55e);
+    color:white;
+    font-size:20px;
+    font-weight:600;
+    transition:.3s;
+}
+
+.btn-register:hover{
+    transform:translateY(-2px);
+    box-shadow:0 8px 18px rgba(34,197,94,.35);
+}
+
+.bottom-text{
+    text-align:center;
+    margin-top:18px;
+    color:#e5e7eb;
+    font-size:18px;
+}
+
+.bottom-text a{
+    color:#86efac;
+    text-decoration:none;
+    font-weight:600;
+}
+
+.bottom-text a:hover{
+    text-decoration:underline;
+}
+</style>
+</head>
+
+<body>
+
+<div class="auth-box">
+    <h2 class="auth-title">Register</h2>
+
+    <form method="POST" action="/register">
+        <input type="text" name="username" class="form-control mb-3" placeholder="Username" required>
+        <input type="email" name="email" class="form-control mb-3" placeholder="Email" required>
+        <input type="password" name="password" class="form-control mb-3" placeholder="Password" required>
+        <button class="btn btn-register w-100">Register</button>
+    </form>
+
+    <div class="bottom-text">
+        Already have an account?
+        <a href="/login">Login</a>
+    </div>
+</div>
+
+</body>
+</html>

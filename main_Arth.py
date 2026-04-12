@@ -1,11 +1,6 @@
-from flask import Flask, request, render_template, redirect, url_for, flash, jsonify
+from flask import Flask, request, render_template, redirect, url_for, flash, session, jsonify
 from flask_sqlalchemy import SQLAlchemy
-from flask_jwt_extended import (
-    JWTManager,
-    create_access_token,
-    jwt_required,
-    get_jwt_identity,
-)
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import timedelta
 import pandas as pd
@@ -70,13 +65,18 @@ def get_demo_data(disease):
 
     return desc, precautions, medications, diet, workout
 
+
 # =========================
 # ROUTES
 # =========================
 
+# ---------- HOME ----------
 @app.route("/")
 def home():
-    return render_template("index.html")
+    if "user" in session:
+        return redirect(url_for("dashboard"))
+    return redirect(url_for("login"))
+
 
 # ---------- REGISTER ----------
 @app.route("/register", methods=["GET", "POST"])
@@ -95,7 +95,11 @@ def register():
             return redirect(url_for("register"))
 
         hashed_password = generate_password_hash(password)
-        new_user = User(username=username, password=hashed_password)
+
+        new_user = User(
+            username=username,
+            password=hashed_password
+        )
 
         db.session.add(new_user)
         db.session.commit()
@@ -104,6 +108,7 @@ def register():
         return redirect(url_for("login"))
 
     return render_template("register.html")
+
 
 # ---------- LOGIN ----------
 @app.route("/login", methods=["GET", "POST"])
@@ -115,13 +120,71 @@ def login():
         user = User.query.filter_by(username=username).first()
 
         if user and check_password_hash(user.password, password):
-            access_token = create_access_token(identity=username)
-            return render_template("token.html", token=access_token)
+            session["user"] = username
+            return redirect(url_for("dashboard"))
 
         flash("Invalid username or password.")
         return redirect(url_for("login"))
 
     return render_template("login.html")
+
+
+# ---------- LOGOUT ----------
+@app.route("/logout")
+def logout():
+    session.clear()
+    flash("Logged out successfully.")
+    return redirect(url_for("login"))
+
+
+# ---------- DASHBOARD ----------
+@app.route("/dashboard")
+def dashboard():
+    if "user" not in session:
+        return redirect(url_for("login"))
+
+    return render_template("index.html", name=session["user"])
+
+
+# ---------- WEBSITE PREDICT ----------
+@app.route("/predict", methods=["POST"])
+def predict():
+    if "user" not in session:
+        return redirect(url_for("login"))
+
+    current_user = session["user"]
+
+    age = request.form.get("age")
+    location = request.form.get("location")
+    symptoms = request.form.get("symptoms")
+
+    if not symptoms:
+        flash("Please enter symptoms.")
+        return redirect(url_for("dashboard"))
+
+    # Demo prediction (replace with ML model)
+    predicted_disease = "Heart attack"
+
+    desc, precautions, medications, diet, workout = get_demo_data(predicted_disease)
+
+    return render_template(
+        "index.html",
+        name=current_user,
+        age=age,
+        location=location,
+        symptoms=symptoms,
+        predicted_disease=predicted_disease,
+        dis_des=desc,
+        my_precautions=precautions[:4],
+        medications=medications,
+        my_diet=diet,
+        workout=workout
+    )
+
+
+# =========================
+# JWT API ROUTES
+# =========================
 
 # ---------- API LOGIN ----------
 @app.route("/api/login", methods=["POST"])
@@ -139,66 +202,55 @@ def api_login():
 
     return jsonify({"message": "Invalid credentials"}), 401
 
-# ---------- PROTECTED PREDICT ----------
-@app.route("/predict", methods=["POST"])
+
+# ---------- API PREDICT ----------
+@app.route("/api/predict", methods=["POST"])
 @jwt_required()
-def predict():
+def api_predict():
     current_user = get_jwt_identity()
 
-    symptoms = request.form.get("symptoms") or request.json.get("symptoms", "")
+    data = request.get_json()
+    symptoms = data.get("symptoms", "")
 
     if not symptoms:
         return jsonify({"message": "Please enter symptoms"}), 400
 
-    # Replace this with your ML model prediction
     predicted_disease = "Heart attack"
 
     desc, precautions, medications, diet, workout = get_demo_data(predicted_disease)
 
-    # HTML form support
-    if request.form:
-        return render_template(
-            "index.html",
-            name=current_user,
-            symptoms=symptoms,
-            predicted_disease=predicted_disease,
-            dis_des=desc,
-            my_precautions=precautions[:4],
-            medications=medications,
-            my_diet=diet,
-            workout=workout,
-        )
+    return jsonify({
+        "user": current_user,
+        "symptoms": symptoms,
+        "predicted_disease": predicted_disease,
+        "description": desc,
+        "precautions": precautions[:4],
+        "medications": medications,
+        "diet": diet,
+        "workout": workout
+    })
 
-    # API JSON support
-    return jsonify(
-        {
-            "user": current_user,
-            "symptoms": symptoms,
-            "predicted_disease": predicted_disease,
-            "description": desc,
-            "precautions": precautions[:4],
-            "medications": medications,
-            "diet": diet,
-            "workout": workout,
-        }
-    )
 
 # ---------- OTHER PAGES ----------
 @app.route("/about")
 def about():
     return render_template("about.html")
 
+
 @app.route("/contact")
 def contact():
     return render_template("contact.html")
+
 
 @app.route("/developer")
 def developer():
     return render_template("developer.html")
 
+
 @app.route("/blog")
 def blog():
     return render_template("blog.html")
+
 
 # =========================
 # MAIN
