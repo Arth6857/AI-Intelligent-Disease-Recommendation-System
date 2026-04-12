@@ -1,7 +1,8 @@
 flask
-numpy
+flask-jwt-extended
+flask-sqlalchemy
+werkzeug
 pandas
 scikit-learn
-opencv-python
-pillow
+textblob
 gunicorn
