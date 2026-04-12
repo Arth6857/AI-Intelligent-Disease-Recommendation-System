@@ -26,6 +26,7 @@ jwt = JWTManager(app)
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(120), unique=True, nullable=False)
+    email = db.Column(db.String(150), unique=True, nullable=True)
     password = db.Column(db.String(255), nullable=False)
 
 with app.app_context():
@@ -65,39 +66,39 @@ def get_demo_data(disease):
 
     return desc, precautions, medications, diet, workout
 
-
 # =========================
 # ROUTES
 # =========================
 
-# ---------- HOME ----------
 @app.route("/")
 def home():
-    if "user" in session:
-        return redirect(url_for("dashboard"))
     return redirect(url_for("login"))
-
 
 # ---------- REGISTER ----------
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
-        username = request.form.get("username")
-        password = request.form.get("password")
+        username = request.form.get("username").strip()
+        email = request.form.get("email").strip()
+        password = request.form.get("password").strip()
 
-        if not username or not password:
+        if not username or not email or not password:
             flash("Please fill all fields.")
             return redirect(url_for("register"))
 
-        existing_user = User.query.filter_by(username=username).first()
+        existing_user = User.query.filter(
+            (User.username == username) | (User.email == email)
+        ).first()
+
         if existing_user:
-            flash("Username already exists.")
+            flash("Username or Email already exists.")
             return redirect(url_for("register"))
 
         hashed_password = generate_password_hash(password)
 
         new_user = User(
             username=username,
+            email=email,
             password=hashed_password
         )
 
@@ -109,25 +110,27 @@ def register():
 
     return render_template("register.html")
 
-
 # ---------- LOGIN ----------
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        username = request.form.get("username")
-        password = request.form.get("password")
+        username_or_email = request.form.get("username").strip()
+        password = request.form.get("password").strip()
 
-        user = User.query.filter_by(username=username).first()
+        user = User.query.filter(
+            (User.username == username_or_email) |
+            (User.email == username_or_email)
+        ).first()
 
         if user and check_password_hash(user.password, password):
-            session["user"] = username
+            session["user"] = user.username
+            flash("Login successful.")
             return redirect(url_for("dashboard"))
 
-        flash("Invalid username or password.")
+        flash("Invalid username/email or password.")
         return redirect(url_for("login"))
 
     return render_template("login.html")
-
 
 # ---------- LOGOUT ----------
 @app.route("/logout")
@@ -136,7 +139,6 @@ def logout():
     flash("Logged out successfully.")
     return redirect(url_for("login"))
 
-
 # ---------- DASHBOARD ----------
 @app.route("/dashboard")
 def dashboard():
@@ -144,7 +146,6 @@ def dashboard():
         return redirect(url_for("login"))
 
     return render_template("index.html", name=session["user"])
-
 
 # ---------- WEBSITE PREDICT ----------
 @app.route("/predict", methods=["POST"])
@@ -162,8 +163,7 @@ def predict():
         flash("Please enter symptoms.")
         return redirect(url_for("dashboard"))
 
-    # Demo prediction (replace with ML model)
-    predicted_disease = "Heart attack"
+    predicted_disease = "Heart attack"   # Replace with ML model
 
     desc, precautions, medications, diet, workout = get_demo_data(predicted_disease)
 
@@ -181,34 +181,33 @@ def predict():
         workout=workout
     )
 
-
 # =========================
 # JWT API ROUTES
 # =========================
 
-# ---------- API LOGIN ----------
 @app.route("/api/login", methods=["POST"])
 def api_login():
     data = request.get_json()
 
-    username = data.get("username")
+    username_or_email = data.get("username")
     password = data.get("password")
 
-    user = User.query.filter_by(username=username).first()
+    user = User.query.filter(
+        (User.username == username_or_email) |
+        (User.email == username_or_email)
+    ).first()
 
     if user and check_password_hash(user.password, password):
-        token = create_access_token(identity=username)
+        token = create_access_token(identity=user.username)
         return jsonify({"access_token": token}), 200
 
     return jsonify({"message": "Invalid credentials"}), 401
 
 
-# ---------- API PREDICT ----------
 @app.route("/api/predict", methods=["POST"])
 @jwt_required()
 def api_predict():
     current_user = get_jwt_identity()
-
     data = request.get_json()
     symptoms = data.get("symptoms", "")
 
@@ -230,27 +229,22 @@ def api_predict():
         "workout": workout
     })
 
-
 # ---------- OTHER PAGES ----------
 @app.route("/about")
 def about():
     return render_template("about.html")
 
-
 @app.route("/contact")
 def contact():
     return render_template("contact.html")
-
 
 @app.route("/developer")
 def developer():
     return render_template("developer.html")
 
-
 @app.route("/blog")
 def blog():
     return render_template("blog.html")
-
 
 # =========================
 # MAIN
